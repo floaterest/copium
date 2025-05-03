@@ -2,6 +2,8 @@
 
 ## Hamming Weight
 
+> [LeetCode](./leetcode.com/number-of-steps-to-reduce-a-number-to-zero.rs)
+
 **Theorem.** The _hamming weight_ of an integer $N$ (represented in binary) can be computed in $O(log N)$ time.
 
 _Proof._
