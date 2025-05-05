@@ -20,7 +20,7 @@ For convenience, we will say "$(i,j)$ is valid" to mean that the subarray $a[i..
 _Proof._ Let $c$ be the number of $(i,j)$ such that
 
 $
-min_(i ⩽ k ⩽ j) a_k=m "and" max_(i ⩽ k ⩽ j) a_k=M.
+  min_(i ⩽ k ⩽ j) a_k=m "and" max_(i ⩽ k ⩽ j) a_k=M.
 $
 Write $c=sum_(j < ω) c_j$ where $c_j$ is the number of $i$'s such that $(i,j)$ is valid.
 
