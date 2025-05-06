@@ -1,6 +1,5 @@
 #import "preamble.typ":*
-= Algorithms
-== Sliding Window
+= Sliding Window
 
 Many problems in the format "given an array, count the number of subarrays that satisfies certain property" can be solved using the _sliding window_ technique in $O(n)$ time--despite there are $O(n^2)$ many subarrays. These algorithms are often _online_ algorithms and their behavior is very similar to greedy algorithms. Therefore, we can easily generalise them to infinite arrays.
 
@@ -12,7 +11,7 @@ Following the steps above, we call $(i,j)$ a _window_. Each time we increment $j
 
 For convenience, we will say "$(i,j)$ is valid" to mean that the subarray $a[i..j]$ is what we want to count. We shall use $a_i$ and $a(i)$ to refer to the $i$th element of $a$. 
 
-=== Count Subarrays With Fixed Bounds
+== Count Subarrays With Fixed Bounds
 
 #link("https://leetcode.com/problems/count-subarrays-with-fixed-bounds")
 
@@ -32,7 +31,7 @@ Fix right endpoint $j$, define the following left endpoints:
 
 Notice that if $i_m$ or $i_M$ does not exist, then $c_j=0$ as no subarray ending at $j$ is valid. If $i^*$ does not exist, then all subarrays ending at $j$ is valid: thus $c_j=i+1$ in this case. Let $i=min{i_m,i_M}$. If $i^* < i$, then $(i',j)$ is valid if and only if $i^* < i' ⩽ i$, hence $c_j=i-i^*$. Otherwise (when $i < i^*$), $c_j=0$. #h(1fr) $square$
 
-=== Subarrays with K Different Integers
+== Subarrays with K Different Integers
 
 #link("https://leetcode.com/problems/subarrays-with-k-different-integers/")
 
