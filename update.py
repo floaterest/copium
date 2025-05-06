@@ -15,19 +15,30 @@ def write(src: str, dst: str, url: ParseResult):
         fo.write(f'{prefix} {url}\n')
         fo.write(fi.read())
 
+LC = dict()
+def leetcode(url: ParseResult):
+    _, _, title, *_ = url.path.split('/')
+    if title in LC:
+        code = LC[title]
+    else:
+        code = input(f'Code for {title}: ')
+        LC[title] = code
+    return [
+        f'({url.netloc}) {title}',
+        path.join(url.netloc, code),
+        f'https://{url.netloc}/problems/{title}/'
+    ]
 
 def main(args, url: ParseResult):
-    src = args.src
-    ext = path.splitext(src)[1]
     match url.netloc:
         case 'leetcode.com':
-            _, _, title, *_ = url.path.split('/')
-            msg = f'({url.netloc}) {title}'
-            dst = path.join(url.netloc, title + ext)
-            url = f'https://{url.netloc}/problems/{title}/'
+            msg, dst, url = leetcode(url)
         case _:
             raise NotImplementedError(f'Unsupported URL')
 
+    src = args.src
+    dst += path.splitext(src)[1]
+    
     if path.exists(dst):
         msg, copy = f'update{msg}', '\033[93mReplace\033[00m'
     else:
