@@ -1,3 +1,4 @@
+#!python3
 import os
 from os import path
 from urllib.parse import urlparse, ParseResult
