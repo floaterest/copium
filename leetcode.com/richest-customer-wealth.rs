@@ -1,5 +1,4 @@
 // https://leetcode.com/problems/richest-customer-wealth
-// https://leetcode.com/problems/running-sum-of-1d-array/
 pub struct Solution;
 
 impl Solution {
