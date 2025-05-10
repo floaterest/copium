@@ -6,9 +6,8 @@ impl Solution {
         if num == 0 {
             return 0;
         }
-        let a = num.ilog2() as i32;
-        let b = format!("{num:b}").chars().filter(|&c| c == '1').count() as i32;
-        a + b
+        let s: i32 = (1..32).map(|i| num >> i).sum();
+        num.ilog2() as i32 + num - s
     }
 }
 
