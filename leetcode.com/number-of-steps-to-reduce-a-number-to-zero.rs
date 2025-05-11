@@ -3,11 +3,8 @@ pub struct Solution;
 
 impl Solution {
     pub fn number_of_steps(num: i32) -> i32 {
-        if num == 0 {
-            return 0;
-        }
-        let s: i32 = (1..32).map(|i| num >> i).sum();
-        num.ilog2() as i32 + num - s
+        num + num.checked_ilog2().unwrap_or_default() as i32
+            - (1..32).map(|i| num >> i).sum::<i32>()
     }
 }
 
