@@ -10,17 +10,15 @@ impl Solution {
             '{' => '}',
             _ => unreachable!(),
         };
-        for ch in s.chars() {
-            match ch {
-                '(' | '[' | '{' => v.push(ch),
-                _ => {
-                    if v.pop().map(|a| pair(a) != ch).unwrap_or(true) {
-                        return false;
-                    }
-                }
+        // find the char that makes it an NO instance
+        let u = s.chars().find(|&ch| match ch {
+            '(' | '[' | '{' => {
+                v.push(ch);
+                false
             }
-        }
-        v.is_empty()
+            _ => v.pop().map(|a| pair(a) != ch).unwrap_or(true),
+        });
+        u.is_none() && v.is_empty()
     }
 }
 
