@@ -3,12 +3,13 @@ pub struct Solution;
 
 impl Solution {
     pub fn rob(nums: Vec<i32>) -> i32 {
-        if nums.is_empty() {
-            return 0;
-        }
         let n = nums.len();
         // assume items are numbered 1, 2, ...
         // dp[i] is best rob for items 1..i
+
+        // dp[i] is either
+        //   dp[i - 2] + v_i if take the ith item
+        //   dp[i - 1]       if skip the ith item
         let mut dp = Vec::with_capacity(n);
         dp.push(0);
         dp.push(0);
