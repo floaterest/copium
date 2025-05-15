@@ -1,32 +1,28 @@
 // https://leetcode.com/problems/count-largest-group/
-pub struct Solution;
-
-use std::{collections::HashMap, iter::from_fn};
 impl Solution {
+    fn sum_digits(n: i32) -> i32 {
+        if n < 10 { n } else { n % 10 + Self::sum_digits(n / 10) }
+    }
     pub fn count_largest_group(n: i32) -> i32 {
-        let mut h: HashMap<i32, i32> = HashMap::new();
-        for mut i in 1..n + 1 {
-            // sum of digits
-            let s = from_fn(move || {
-                let u = if i == 0 { None } else { Some(i % 10) };
-                i /= 10;
-                u
-            })
-            .sum();
-            *h.entry(s).or_default() += 1;
+        let n = n + 1;
+        let mut v = vec![0; 10 + (n / 10) as usize];
+        for k in 1..n {
+            v[Self::sum_digits(k) as usize] += 1;
         }
-        let max = *h.values().max().unwrap_or(&0);
-        h.values().filter(|&&c| c == max).count() as i32
+        let m = *v.iter().max().unwrap();
+        v.iter().filter(|&&a| a == m).count() as i32
     }
 }
+
+pub struct Solution;
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
     #[test]
     fn t() {
         assert_eq!(Solution::count_largest_group(13), 4);
         assert_eq!(Solution::count_largest_group(2), 2);
+        assert_eq!(Solution::count_largest_group(174), 1);
     }
 }
