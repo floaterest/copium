@@ -1,39 +1,15 @@
 // https://leetcode.com/problems/longest-consecutive-sequence/
-use std::collections::{HashMap, HashSet};
+use std::{collections::HashSet, iter::successors};
 impl Solution {
-    fn dfs(s: &i32, edges: &HashMap<i32, Vec<i32>>, vis: &mut HashSet<i32>) {
-        if vis.contains(s) {
-            return;
-        }
-        vis.insert(*s);
-        for v in &edges[s] {
-            Self::dfs(v, edges, vis);
-        }
-    }
     pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
         // O(n) time
-        // build graph
-        let mut nodes: HashSet<_> = nums.into_iter().map(|n| n * 2).collect();
-        let edges: HashMap<i32, Vec<i32>> = nodes
-            .iter()
-            .flat_map(|&a| [(a - 1, a), (a, a + 1)])
-            .fold(HashMap::new(), |mut h, (u, v)| {
-                h.entry(u).or_insert(vec![]).push(v);
-                h.entry(v).or_insert(vec![]).push(u);
-                h
-            });
-        // find SCCs (consumes nodes)
-        let mut max = 0;
-        while !nodes.is_empty() {
-            let s = nodes.iter().next().unwrap().clone();
-            let mut vis = HashSet::new();
-            Self::dfs(&s, &edges, &mut vis);
-            for v in vis.iter() {
-                nodes.remove(v);
-            }
-            max = vis.iter().filter(|&v| v % 2 == 0).count().max(max);
-        }
-        max as i32
+        let set: HashSet<_> = nums.into_iter().collect();
+        set.iter()
+            .filter(|&a| !set.contains(&(a - 1)))
+            // count streak
+            .map(|&a| successors(Some(a), |&a| Some(a + 1)).take_while(|a| set.contains(a)).count())
+            .max()
+            .unwrap_or(0) as i32
     }
 }
 
