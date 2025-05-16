@@ -7,21 +7,15 @@ impl Solution {
             *st *= x;
             Some(*st)
         };
-        let pref: Vec<_> = nums[..n - 1].iter().scan(1, prod).collect();
-        let suf: Vec<_> = nums[1..]
+        let pref = once(1).chain(nums[..n - 1].iter().scan(1, prod));
+        let suff = nums[1..]
             .iter()
             .rev()
-            .scan(1, prod)
-            // why is scanning a double ended iter not double ended?
-            .collect::<Vec<_>>()
-            .into_iter()
+            // why is scan on DoubleEndedIter not DoubleEndedIter?
+            .scan(1,prod).collect::<Vec<_>>().into_iter()
             .rev()
-            .collect();
-        once(1)
-            .chain(pref.into_iter())
-            .zip(suf.into_iter().chain(once(1)))
-            .map(|(a, b)| a * b)
-            .collect()
+            .chain(once(1));
+        suff.zip(pref).map(|(a, b)| a * b).collect()
     }
 }
 
