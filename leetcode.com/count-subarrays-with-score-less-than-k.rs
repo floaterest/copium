@@ -7,8 +7,7 @@ impl Solution {
             .enumerate()
             .map(|(j, &x)| {
                 // update score at x
-                s += x;
-                l += 1;
+                (s, l) = (s + x, l + 1);
                 // ix == None ==> s*l is score of (0, j)
                 ix = ix.or((s * l >= k).then(|| 0));
                 // let i be max such that score of (i,j) is >= k
@@ -18,8 +17,7 @@ impl Solution {
                     if (s - y) * (l - 1) < k {
                         break;
                     }
-                    s -= y;
-                    l -= 1;
+                    (s, l) = (s - y, l - 1);
                     ix = Some(i + 1);
                 }
                 assert!(ix.is_none_or(|_| s * l >= k));
