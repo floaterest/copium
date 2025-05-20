@@ -1,24 +1,30 @@
 // https://leetcode.com/problems/count-subarrays-with-fixed-bounds/
 impl Solution {
     pub fn count_subarrays(nums: Vec<i32>, min_k: i32, max_k: i32) -> i64 {
-        // count num of subarrays whose min is min_k and max is max_k
-        let (mut ibad, mut imin, mut imax) = (-1, -1, -1);
+        let (mut ibad, mut imin, mut imax) = (None, None, None);
+        // ibad is latest index where num is <m and >M
+        // imin is latest index where num is =m
+        // imax is latest index where num is =M
+        // thus (i, j) is valid iff ibad < i <= min(imin, imax)
         nums.into_iter()
             .enumerate()
-            .map(|(i, x)| (i as i64, x))
-            .map(|(i, x)| {
+            .map(|(j, x)| {
                 if x == min_k {
-                    imin = i;
+                    imin = Some(j);
                 }
                 if x == max_k {
-                    imax = i;
+                    imax = Some(j);
                 }
                 if x < min_k || x > max_k {
-                    ibad = i;
+                    ibad = Some(j);
                 }
-                0.max(imin.min(imax) - ibad)
+                if let Some(i) = imin.and_then(|i1| imax.map(|i2| i1.min(i2))) {
+                    if let Some(ib) = ibad { if ib < i { i - ib } else { 0 } } else { i + 1 }
+                } else {
+                    0
+                }
             })
-            .sum()
+            .sum::<usize>() as i64
     }
 }
 
