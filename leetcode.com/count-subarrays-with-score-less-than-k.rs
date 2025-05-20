@@ -1,31 +1,28 @@
 // https://leetcode.com/problems/count-subarrays-with-score-less-than-k/
 impl Solution {
     pub fn count_subarrays(nums: Vec<i32>, k: i64) -> i64 {
-        let nums: Vec<_> = nums.into_iter().map(|x| x as i64).collect();
-        let mut ix: Option<usize> = None;
-        let (mut s, mut l) = (0, 0);
-        // add a => (s+a)*(l+1)
-        // remove a => (s-a) * (l-1)
+        let (mut ix, mut s, mut l) = (None, 0, 0);
+        let nums: Vec<i64> = nums.into_iter().map(i32::into).collect();
         nums.iter()
             .enumerate()
-            .map(|(j, x)| {
+            .map(|(j, &x)| {
                 // update score at x
                 s += x;
                 l += 1;
                 // ix == None ==> s*l is score of (0, j)
                 ix = ix.or((s * l >= k).then(|| 0));
                 // let i be max such that score of (i,j) is >= k
-                while let Some(i) = ix {
+                while let Some((i, y)) = ix.map(|i| (i, nums[i])) {
                     assert!(l > 0);
-                    if (s - nums[i]) * (l - 1) < k {
+                    // if remove y makes score less than k
+                    if (s - y) * (l - 1) < k {
                         break;
                     }
-                    s -= nums[i];
+                    s -= y;
                     l -= 1;
                     ix = Some(i + 1);
                 }
                 assert!(ix.is_none_or(|_| s * l >= k));
-                // println!("{ix:?} {j} => {}", s * l);
                 // let cj be count of valid (i, j) for i <= j
                 // if no such i exists
                 //    then only (i', j) valid for any 0 <= i' <= j
