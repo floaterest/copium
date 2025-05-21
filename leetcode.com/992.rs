@@ -2,25 +2,36 @@
 use std::collections::HashMap;
 impl Solution {
     pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
-        // O(n) sliding window
-        let k = k as usize;
+        let (k, mut imin, mut imax, mut h) = (k as usize, None, None, HashMap::new());
+        // let imax be max such that (imax, j) has (exactly) k
+        // let imin be min such that (imin+1, j) has (exactly) k
+        // fix j, then (i, j) has k iff imin < i <= imax
         nums.iter()
-            .scan((0, 0, HashMap::new()), |(i, m, h), a| {
-                *h.entry(*a).or_insert(0) += 1;
+            .map(|&a| /* let a be the jth element */ {
+                *h.entry(a).or_insert(0) += 1;
                 if h.len() > k {
-                    assert_eq!(h.len(), k + 1);
-                    assert_eq!(h.remove(&nums[*m]).unwrap(), 1);
-                    *m += 1;
-                    *i = *m;
+                    // this iter says (ix, j) has k+1
+                    // prev iter says
+                    //   (ix, j-1) has k
+                    //   (ix+1, j-1) has k-1
+                    // thus (ix+1, j) has k
+                    let ix = imax.unwrap();
+                    assert_eq!(h.remove(&nums[ix]).unwrap(), 1);
+                    imin = Some(ix);
+                    imax = Some(ix+1);
                 }
                 if h.len() == k {
-                    while h[&nums[*m]] > 1 {
-                        h.entry(nums[*m]).and_modify(|e| *e -= 1);
-                        *m += 1;
+                    // find imax
+                    let mut ix = imax.unwrap_or(0);
+                    while h[&nums[ix]] > 1 {
+                        h.entry(nums[ix]).and_modify(|e| *e -= 1);
+                        ix += 1;
                     }
-                    Some(*m - *i + 1)
+                    imax = Some(ix);
+                    // (i, j) is valid iff imin < i <= imax
+                    imin.map(|im|ix-im).unwrap_or(ix+1)
                 } else {
-                    Some(0)
+                    0
                 }
             })
             .sum::<usize>() as i32
