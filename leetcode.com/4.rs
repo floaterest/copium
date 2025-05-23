@@ -1,7 +1,7 @@
 // https://leetcode.com/problems/median-of-two-sorted-arrays/
 impl Solution {
     fn f(ns1: &[i32], ns2: &[i32], i: usize, j: usize) -> f64 {
-        // i > j trust me
+        // i < j trust me
         let (n1, n2) = (ns1.len(), ns2.len());
         // try cut at nums1 (with its corresponding cut at nums2)
         let m1 = (i + j) / 2;
