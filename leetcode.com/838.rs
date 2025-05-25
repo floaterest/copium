@@ -23,12 +23,12 @@ impl Solution {
                     ('L', _) | (_, 0) => 0,
                     _ => *r + 1,
                 };
-                Some(match (l, *r, l.cmp(&r)) {
-                    (_, _, Equal) => '.',
-                    (0, _, _) => 'R',
-                    (_, 0, _) => 'L',
-                    (_, _, Less) => 'L',
-                    (_, _, Greater) => 'R',
+                Some(match ((l, *r), l.cmp(&r)) {
+                    (_, Equal) => '.',
+                    ((0, _), _) => 'R',
+                    ((_, 0), _) => 'L',
+                    (_, Less) => 'L',
+                    (_, Greater) => 'R',
                 })
             })
             .collect()
