@@ -1,46 +1,37 @@
 // https://leetcode.com/problems/push-dominoes/
 impl Solution {
     pub fn push_dominoes(ds: String) -> String {
-        let mut ls: Vec<_> = ds
+        let mut i = 0;
+        let ls: Vec<_> = ds
             .chars()
             .rev()
-            .scan(0, |i, c| {
-                *i = if c == 'L' {
-                    1
-                } else if *i == 0 || c == 'R' {
-                    0
-                } else {
-                    *i + 1
-                };
-                Some(*i)
-            })
-            .collect();
-        ls.reverse();
-        let mut i = 0;
-        let rs: Vec<_> = ds
-            .chars()
             .map(|c| {
-                i = if c == 'R' {
-                    1
-                } else if i == 0 || c == 'L' {
-                    0
-                } else {
-                    i + 1
+                i = match (c, i) {
+                    ('L', _) => 1,
+                    ('R', _) | (_, 0) => 0,
+                    _ => i + 1,
                 };
                 i
             })
-            .collect();
-        ls.into_iter().zip(rs.into_iter()).map(|(l, r)| {
-            if l == r {
-                '.'
-            } else if l == 0 {
-                'R'
-            } else if r == 0 || l < r {
-                'L'
-            } else {
-                'R'
-            }
-        }).collect()
+            .collect::<Vec<_>>();
+        use std::cmp::Ordering::*;
+        ds.chars()
+            .zip(ls.into_iter().rev())
+            .scan(0, |r, (c, l)| {
+                *r = match (c, *r) {
+                    ('R', _) => 1,
+                    ('L', _) | (_, 0) => 0,
+                    _ => *r + 1,
+                };
+                Some(match (l, *r, l.cmp(&r)) {
+                    (_, _, Equal) => '.',
+                    (0, _, _) => 'R',
+                    (_, 0, _) => 'L',
+                    (_, _, Less) => 'L',
+                    (_, _, Greater) => 'R',
+                })
+            })
+            .collect()
     }
 }
 
