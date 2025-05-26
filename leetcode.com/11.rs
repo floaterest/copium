@@ -5,11 +5,11 @@ impl Solution {
             return 0;
         }
         let (a, b) = (xs.first().unwrap(), xs.last().unwrap());
-        if a <= b {
-            Self::f(&xs[1..])
+        Self::f(if a <= b {
+            &xs[1..]
         } else {
-            Self::f(&xs[..xs.len() - 1])
-        }
+            &xs[..xs.len() - 1]
+        })
         .max((xs.len() as i32 - 1) * a.min(b))
     }
     pub fn max_area(xs: Vec<i32>) -> i32 {
